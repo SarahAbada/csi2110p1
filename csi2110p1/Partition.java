@@ -1,3 +1,5 @@
+package csi2110p1;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -5,55 +7,37 @@ import java.util.LinkedList;
 
 public class Partition<E> {
 
-    class Cluster{
-        LinkedList<Position> sequence;
-        Position leader;
-        Cluster(Position leader){
-            this.leader = leader;
-            this.sequence = new LinkedList<>();
-            this.sequence.add(leader);
-        }
-    }
 
-    class Position {
-        E element;
-        // reference to the sequence storing it
-        Cluster cluster;
-        Position(E element, Cluster cluster) {
-            this.element = element;
-            this.cluster = cluster;
-        }
-    }
-    public LinkedList<Cluster> clusters; // list of parts in the partition
+    public LinkedList<Cluster<E>> clusters; // list of parts in the partition
 
     public Partition() {
         this.clusters = new LinkedList<>();
         
     }
 
-    public Position makeCluster(E x) {
-        Cluster newCluster = new Cluster(new Position(x, null));
+    public Position<E> makeCluster(E x) {
+        Cluster<E> newCluster = new Cluster(new Position(x, null));
         newCluster.sequence.getFirst().cluster = newCluster; // set the cluster reference
         clusters.add(newCluster);
         return newCluster.sequence.getFirst();
     }
 
-    public Cluster getCluster(Position p) {
+    public Cluster<E> getCluster(Position<E> p) {
         return p.cluster;
     }
 
-    public void union(Position p, Position q){
-        Cluster P = getCluster(p);
-        Cluster Q = getCluster(q);
+    public void union(Position<E> p, Position<E> q){
+        Cluster<E> P = getCluster(p);
+        Cluster<E> Q = getCluster(q);
         if(P != Q){
             // merge smaller cluster into larger one
             if(P.sequence.size() < Q.sequence.size()){
-                Cluster temp = P;
+                Cluster<E> temp = P;
                 P = Q;
                 Q = temp;
             }
             // now P is guaranteed to be the larger cluster
-            for(Position pos : Q.sequence){
+            for(Position<E> pos : Q.sequence){
                 pos.cluster = P; // update cluster reference
                 P.sequence.add(pos);
             }
@@ -61,11 +45,11 @@ public class Partition<E> {
         }
     }
 
-    public Position find(Position v) {
+    public Position<E> find(Position<E> v) {
         return v.cluster.leader;
     }
 
-    public E element(Position p){
+    public E element(Position<E> p){
         return p.element;
     }
 
@@ -73,14 +57,14 @@ public class Partition<E> {
         return clusters.size();
     }
 
-    public int clusterSize(Position p){
+    public int clusterSize(Position<E> p){
         return getCluster(p).sequence.size();
     }
 
-    public ArrayList<Position> clusterPositions(Position p){
-        Cluster cluster = getCluster(p);
-        ArrayList<Position> positions = new ArrayList<>();
-        for(Position pos : cluster.sequence){
+    public ArrayList<Position<E>> clusterPositions(Position<E> p){
+        Cluster<E> cluster = getCluster(p);
+        ArrayList<Position<E>> positions = new ArrayList<>();
+        for(Position<E> pos : cluster.sequence){
             positions.add(pos);
         }
         return positions;
@@ -88,7 +72,7 @@ public class Partition<E> {
 
     public ArrayList<Integer> clusterSizes(){
         ArrayList<Integer> sizes = new ArrayList<>();
-        for(Cluster cluster : clusters){
+        for(Cluster<E> cluster : clusters){
             sizes.add(cluster.sequence.size());
         }
         Collections.sort(sizes, Collections.reverseOrder());
