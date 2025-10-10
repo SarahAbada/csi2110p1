@@ -1,7 +1,7 @@
 package csi2110p1;
 
     class Cluster<E>{
-        DoublyLinkedList<Position<E>> sequence;
+        DoublyLinkedList<E> sequence;
         Position<E> leader;
         Cluster(Position<E> leader){
             this.leader = leader;

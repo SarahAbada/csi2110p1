@@ -16,7 +16,7 @@ public class Partition<E> {
     }
 
     public Position<E> makeCluster(E x) {
-        Cluster<E> newCluster = new Cluster(new Position(x, null));
+        Cluster<E> newCluster = new Cluster<E>(new Position<E>(x, null));
         newCluster.sequence.getFirst().cluster = newCluster; // set the cluster reference
         clusters.add(newCluster);
         return newCluster.sequence.getFirst();
@@ -79,58 +79,5 @@ public class Partition<E> {
         return sizes;
     }
 
-public static void main(String[] args) {
-    Partition<Integer> partition = new Partition<>();
-
-    // Create singleton clusters
-    Partition<Integer>.Position a = partition.makeCluster(10);
-    Partition<Integer>.Position b = partition.makeCluster(20);
-    Partition<Integer>.Position c = partition.makeCluster(30);
-    Partition<Integer>.Position d = partition.makeCluster(40);
-
-    // Test element() and initial leaders
-    System.out.println("Element at position a: " + partition.element(a)); // 10
-    System.out.println("Leader of a: " + partition.find(a).element); // 10
-    System.out.println("Leader of b: " + partition.find(b).element); // 20
-
-    // Test numberOfClusters()
-    System.out.println("Number of clusters: " + partition.numberOfClusters()); // 4
-
-    // Test union(a, b)
-    partition.union(a, b);
-    System.out.println("\nAfter union(a, b):");
-    System.out.println("Leader of a: " + partition.find(a).element);
-    System.out.println("Leader of b: " + partition.find(b).element);
-    System.out.println("Number of clusters: " + partition.numberOfClusters()); // 3
-
-    // Test union(b, c)
-    partition.union(b, c);
-    System.out.println("\nAfter union(b, c):");
-    System.out.println("Leader of c: " + partition.find(c).element);
-    System.out.println("Cluster size for a: " + partition.clusterSize(a)); // Should be 3
-
-    // Test clusterPositions(a)
-    System.out.print("Positions in a's cluster: ");
-    for (Partition<Integer>.Position pos : partition.clusterPositions(a)) {
-        System.out.print(partition.element(pos) + " ");
-    }
-    System.out.println();
-
-    // Test union(d, a) (should merge the biggest with the smallest)
-    partition.union(d, a);
-    System.out.println("\nAfter union(d, a):");
-    System.out.println("Leader of d: " + partition.find(d).element);
-    System.out.println("Number of clusters: " + partition.numberOfClusters()); // 1
-
-    // Test clusterSizes()
-    System.out.println("Cluster sizes (should be [4]): " + partition.clusterSizes());
-
-    // Test clusterPositions(d)
-    System.out.print("Positions in d's cluster: ");
-    for (Partition<Integer>.Position pos : partition.clusterPositions(d)) {
-        System.out.print(partition.element(pos) + " ");
-    }
-    System.out.println();
-}
 
 }
