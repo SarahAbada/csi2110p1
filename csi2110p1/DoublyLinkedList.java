@@ -24,8 +24,7 @@ public class DoublyLinkedList<E> implements Iterable<Position<E>> {
     public Position<E> getLast() {
         return tail;
     }
-    public void add(Position<E> element) {
-        Position<E> newNode = new Position<>(element.element, null);
+    public void add(Position<E> newNode) {
         if (isEmpty()) {
             head = newNode;
             tail = newNode;
