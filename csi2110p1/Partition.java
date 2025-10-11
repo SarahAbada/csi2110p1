@@ -1,7 +1,6 @@
 package csi2110p1;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 
@@ -16,7 +15,14 @@ public class Partition<E> {
     }
 
     public Position<E> makeCluster(E x) {
-        Cluster<E> newCluster = new Cluster<E>(new Position<E>(x, null));
+        Cluster<E> newCluster = new Cluster<E>(new Position<E>(x, null, 0, 0), "unidentified");
+        newCluster.sequence.getFirst().cluster = newCluster; // set the cluster reference
+        clusters.add(newCluster);
+        return newCluster.sequence.getFirst();
+    }
+
+    public Position<E> makeCluster(E x, String id, int xCoord, int yCoord) {
+        Cluster<E> newCluster = new Cluster<E>(new Position<E>(x, null, xCoord, yCoord), id);
         newCluster.sequence.getFirst().cluster = newCluster; // set the cluster reference
         clusters.add(newCluster);
         return newCluster.sequence.getFirst();
