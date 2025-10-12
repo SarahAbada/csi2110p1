@@ -17,7 +17,10 @@ public class Part2a {
             List<List<Integer>> data = new ArrayList<>();
             Partition<Integer> partition = new Partition<>();
             String firstline = scanner.nextLine(); // skip the first line
-            String[] dimensions = firstline.split(" ");
+            String[] dimensions = firstline.trim().split("\\s+");
+            for (String dim : dimensions) {
+                System.out.println(dim);
+            }
             int rows = Integer.parseInt(dimensions[0]);
             int cols = Integer.parseInt(dimensions[1]);
             Position<Integer>[][] positions = new Position[rows][cols];
