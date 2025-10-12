@@ -68,7 +68,7 @@ public class Part2a {
             List<Integer> sizes = new ArrayList<>();
             for(Cluster<Integer> cluster : partition.clusters){
                 if(partition.element(cluster.leader) == 1){
-                    sizes.add(cluster.size);
+                    sizes.add(cluster.sequence.size());
                 }
             }
             sizes.sort((a, b) -> b - a);
