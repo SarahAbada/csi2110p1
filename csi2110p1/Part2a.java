@@ -136,15 +136,66 @@ public class Part2a {
                 totalSize += size;
             }
             System.out.println("Total size of islands: " + totalSize);
+            int phasesOfRecovery = Integer.parseInt(scanner.nextLine());
+            for(int phase = 1; phase <= phasesOfRecovery; phase++){
+                String skip = scanner.nextLine(); // skip the next line
+                String line = scanner.nextLine().trim();
+                String[] coords = line.split(" ");
+                for (int i=0; i<coords.length/2; i++){
+                    int x = Integer.parseInt(coords[i*2]);
+                    int y = Integer.parseInt(coords[i*2+1]);
+                    // change the value at data[x][y] to 1 (land)
+                    data.get(x).set(y, 1);
+                    // create a new cluster for this position
+                    Position<Integer> newPos = partition.makeCluster(1, "land", x, y);
+                    positions[x][y] = newPos;
 
-
+                    // union with adjacent land cells
+                    if (x > 0 && data.get(x - 1).get(y).equals(1)) {
+                        partition.union(newPos, positions[x - 1][y]);
+                    }
+                    if (x < rows - 1 && data.get(x + 1).get(y).equals(1)) {
+                        partition.union(newPos, positions[x + 1][y]);
+                    }
+                    if (y > 0 && data.get(x).get(y - 1).equals(1)) {
+                        partition.union(newPos, positions[x][y - 1]);
+                    }
+                    if (y < cols - 1 && data.get(x).get(y + 1).equals(1)) {
+                        partition.union(newPos, positions[x][y + 1]);
+                    }
+                }
+                // recount the number of islands
+                count = 0;
+                for(Cluster<Integer> cluster : partition.clusters){
+                    if(partition.element(cluster.leader).equals(1)){
+                        count++;
+                    }
+                }
+                System.out.println("After phase " + phase + ":");
+                System.out.println("Number of islands: " + count);
+                // print the size of each island in descending order
+                sizes = new ArrayList<>();
+                for(Cluster<Integer> cluster : partition.clusters){
+                    if(partition.element(cluster.leader).equals(1)){
+                        sizes.add(cluster.sequence.size());
+                    }
+                }
+                sizes.sort((a, b) -> b - a);
+                System.out.println("Sizes of islands in descending order: ");
+                for (int size : sizes){
+                    System.out.print(size + " ");
+                }
+                System.out.println();
+                // print the total sum of the sizes of the islands
+                totalSize = 0;
+                for (int size : sizes){
+                    totalSize += size;
+                }
+                System.out.println("Total size of islands: " + totalSize);
+            }
             scanner.close();
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
         }
-        // now i have the 2d list of data of integers
-        // i need to make a partition of the data
-
-        
     }
 }
