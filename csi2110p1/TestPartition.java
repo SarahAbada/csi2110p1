@@ -5,12 +5,12 @@ public class TestPartition {
         Partition<Integer> partition = new Partition<>();
 
         // Make singleton clusters
-        Position<Integer> a = partition.makeCluster(10);
-        Position<Integer> b = partition.makeCluster(20);
-        Position<Integer> c = partition.makeCluster(30);
-        Position<Integer> d = partition.makeCluster(40);
+        Node<Integer> a = partition.makeCluster(10);
+        Node<Integer> b = partition.makeCluster(20);
+        Node<Integer> c = partition.makeCluster(30);
+        Node<Integer> d = partition.makeCluster(40);
 
-        System.out.println("Element at position a: " + partition.element(a));
+        System.out.println("Element at Node a: " + partition.element(a));
         System.out.println("Leader of a: " + partition.find(a).element);
         System.out.println("Leader of b: " + partition.find(b).element);
         System.out.println("Number of clusters: " + partition.numberOfClusters());
@@ -26,8 +26,8 @@ public class TestPartition {
         System.out.println("Leader of c: " + partition.find(c).element);
         System.out.println("Cluster size for a: " + partition.clusterSize(a));
 
-        System.out.print("Positions in a's cluster: ");
-        for (Position<Integer> pos : partition.clusterPositions(a)) {
+        System.out.print("Nodes in a's cluster: ");
+        for (Node<Integer> pos : partition.clusterNodes(a)) {
             System.out.print(partition.element(pos) + " ");
         }
         System.out.println();
@@ -39,8 +39,8 @@ public class TestPartition {
 
         System.out.println("Cluster sizes: " + partition.clusterSizes());
 
-        System.out.print("Positions in d's cluster: ");
-        for (Position<Integer> pos : partition.clusterPositions(d)) {
+        System.out.print("Nodes in d's cluster: ");
+        for (Node<Integer> pos : partition.clusterNodes(d)) {
             System.out.print(partition.element(pos) + " ");
         }
         System.out.println();

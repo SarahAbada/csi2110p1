@@ -3,9 +3,9 @@ package csi2110p1;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class DoublyLinkedList<E> implements Iterable<Position<E>> {
-    Position<E> head;
-    Position<E> tail;
+public class DoublyLinkedList<E> implements Iterable<Node<E>> {
+    Node<E> head;
+    Node<E> tail;
     int size;
     public DoublyLinkedList() {
         head = null;
@@ -18,13 +18,13 @@ public class DoublyLinkedList<E> implements Iterable<Position<E>> {
     public boolean isEmpty() {
         return size == 0;
     }
-    public Position<E> getFirst() {
+    public Node<E> getFirst() {
         return head;
     }
-    public Position<E> getLast() {
+    public Node<E> getLast() {
         return tail;
     }
-    public void add(Position<E> newNode) {
+    public void add(Node<E> newNode) {
         if (isEmpty()) {
             head = newNode;
             tail = newNode;
@@ -35,7 +35,7 @@ public class DoublyLinkedList<E> implements Iterable<Position<E>> {
         }
         size++;
     }
-    public void remove(Position<E> node) {
+    public void remove(Node<E> node) {
         if (node == head) {
             head = node.next;
             if (head != null) {
@@ -53,9 +53,9 @@ public class DoublyLinkedList<E> implements Iterable<Position<E>> {
         }
     }
     @Override
-    public Iterator<Position<E>> iterator() {
-        return new Iterator<Position<E>>() {
-            private Position<E> current = head;
+    public Iterator<Node<E>> iterator() {
+        return new Iterator<Node<E>>() {
+            private Node<E> current = head;
 
             @Override
             public boolean hasNext() {
@@ -63,11 +63,11 @@ public class DoublyLinkedList<E> implements Iterable<Position<E>> {
             }
 
             @Override
-            public Position<E> next() {
+            public Node<E> next() {
                 if (!hasNext()) {
                     throw new NoSuchElementException("No more elements");
                 }
-                Position<E> temp = current;
+                Node<E> temp = current;
                 current = current.next;
                 return temp;
             }

@@ -14,25 +14,25 @@ public class Partition<E> {
         
     }
 
-    public Position<E> makeCluster(E x) {
-        Cluster<E> newCluster = new Cluster<E>(new Position<E>(x, null, 0, 0), "unidentified");
+    public Node<E> makeCluster(E x) {
+        Cluster<E> newCluster = new Cluster<E>(new Node<E>(x, null, 0, 0), "unidentified");
         newCluster.sequence.getFirst().cluster = newCluster; // set the cluster reference
         clusters.add(newCluster);
         return newCluster.sequence.getFirst();
     }
 
-    public Position<E> makeCluster(E x, String id, int xCoord, int yCoord) {
-        Cluster<E> newCluster = new Cluster<E>(new Position<E>(x, null, xCoord, yCoord), id);
+    public Node<E> makeCluster(E x, String id, int xCoord, int yCoord) {
+        Cluster<E> newCluster = new Cluster<E>(new Node<E>(x, null, xCoord, yCoord), id);
         newCluster.sequence.getFirst().cluster = newCluster; // set the cluster reference
         clusters.add(newCluster);
         return newCluster.sequence.getFirst();
     }
 
-    public Cluster<E> getCluster(Position<E> p) {
+    public Cluster<E> getCluster(Node<E> p) {
         return p.cluster;
     }
 
-    public void union(Position<E> p, Position<E> q){
+    public void union(Node<E> p, Node<E> q){
         Cluster<E> P = getCluster(p);
         Cluster<E> Q = getCluster(q);
         if(P != Q){
@@ -43,7 +43,7 @@ public class Partition<E> {
                 Q = temp;
             }
             // now P is guaranteed to be the larger cluster
-            for(Position<E> pos : Q.sequence){
+            for(Node<E> pos : Q.sequence){
                 pos.cluster = P; // update cluster reference
                 P.sequence.add(pos);
             }
@@ -51,11 +51,11 @@ public class Partition<E> {
         }
     }
 
-    public Position<E> find(Position<E> v) {
+    public Node<E> find(Node<E> v) {
         return v.cluster.leader;
     }
 
-    public E element(Position<E> p){
+    public E element(Node<E> p){
         return p.element;
     }
 
@@ -63,17 +63,17 @@ public class Partition<E> {
         return clusters.size();
     }
 
-    public int clusterSize(Position<E> p){
+    public int clusterSize(Node<E> p){
         return getCluster(p).sequence.size();
     }
 
-    public ArrayList<Position<E>> clusterPositions(Position<E> p){
+    public ArrayList<Node<E>> clusterNodes(Node<E> p){
         Cluster<E> cluster = getCluster(p);
-        ArrayList<Position<E>> positions = new ArrayList<>();
-        for(Position<E> pos : cluster.sequence){
-            positions.add(pos);
+        ArrayList<Node<E>> Nodes = new ArrayList<>();
+        for(Node<E> pos : cluster.sequence){
+            Nodes.add(pos);
         }
-        return positions;
+        return Nodes;
     }
 
     public ArrayList<Integer> clusterSizes(){

@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-public class Part2a {
+public class IslandSurvey {
     public static void main(String[] args) {
         Scanner filename = new Scanner(System.in);
         System.out.println("Enter the filename: ");
@@ -23,7 +23,7 @@ public class Part2a {
             }
             int rows = Integer.parseInt(dimensions[0]);
             int cols = Integer.parseInt(dimensions[1]);
-            Position<Integer>[][] positions = new Position[rows][cols];
+            Node<Integer>[][] Nodes = new Node[rows][cols];
             for (int i = 0; i < rows; i++){
                 String line = scanner.nextLine().trim();
                 String[] values = line.split(" ");
@@ -58,11 +58,11 @@ public class Part2a {
                 
                 data.add(row);
             }
-            // create a cluster/position for every cell in the 2d list
+            // create a cluster/Node for every cell in the 2d list
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
                     int val = data.get(i).get(j);
-                    // create a cluster for this position
+                    // create a cluster for this Node
                     // if the value is 0, make a cluster with id "water"
                     // if the value is 1, make a cluster with id "land"
                     // if the value is anything else, make a cluster with id "unidentified"
@@ -74,37 +74,37 @@ public class Part2a {
                     } else {
                         clusterId = "unidentified";
                     }
-                    Position<Integer> pos = partition.makeCluster(val, clusterId, i, j);
-                    positions[i][j] = pos;
+                    Node<Integer> pos = partition.makeCluster(val, clusterId, i, j);
+                    Nodes[i][j] = pos;
                 }
             }
             // union adjacent cells with the same value
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
-                    Position<Integer> curPosition = positions[i][j];
+                    Node<Integer> curNode = Nodes[i][j];
                     int curValue = data.get(i).get(j);
                     if (i > 0 && data.get(i - 1).get(j).equals(curValue)) {
-                        partition.union(curPosition, positions[i - 1][j]);
+                        partition.union(curNode, Nodes[i - 1][j]);
                     }
                     if (j > 0 && data.get(i).get(j - 1).equals(curValue)) {
-                        partition.union(curPosition, positions[i][j - 1]);
+                        partition.union(curNode, Nodes[i][j - 1]);
                     }
                     
                 }
                 
             }
-            //List<Position<Integer>[]> unionsToDo = new ArrayList<>();
+            //List<Node<Integer>[]> unionsToDo = new ArrayList<>();
             //Cluster<Integer> prev = null;
             //for(Cluster<Integer> cluster : partition.clusters){
             //    if(prev != null){
             //        if(partition.element(cluster.leader).equals(partition.element(prev.leader))){
-            //            unionsToDo.add(new Position[]{cluster.leader, prev.leader});
+            //            unionsToDo.add(new Node[]{cluster.leader, prev.leader});
             //        }
             //    }
             //    prev = cluster;
             //}
     
-            //for(Position<Integer>[] pair : unionsToDo){
+            //for(Node<Integer>[] pair : unionsToDo){
             //    partition.union(pair[0], pair[1]);
             //}
             // get the number of clusters with id 1
@@ -114,7 +114,8 @@ public class Part2a {
                     count++;
                 }
             }
-            System.out.println("Number of islands: " + count);
+            // print number of islands 
+            System.out.println(count > 0 ? count : -1);
 
             // print the size of each island in descending order
             List<Integer> sizes = new ArrayList<>();
@@ -124,7 +125,8 @@ public class Part2a {
                 }
             }
             sizes.sort((a, b) -> b - a);
-            System.out.println("Sizes of islands in descending order: ");
+            // print sizes of the islands in descending order
+            
             for (int size : sizes){
                 System.out.print(size + " ");
             }
@@ -135,7 +137,7 @@ public class Part2a {
             for (int size : sizes){
                 totalSize += size;
             }
-            System.out.println("Total size of islands: " + totalSize);
+            System.out.println(totalSize);
             int phasesOfRecovery = Integer.parseInt(scanner.nextLine());
             for(int phase = 1; phase <= phasesOfRecovery; phase++){
                 String skip = scanner.nextLine(); // skip the next line
@@ -146,22 +148,22 @@ public class Part2a {
                     int y = Integer.parseInt(coords[i*2+1]);
                     // change the value at data[x][y] to 1 (land)
                     data.get(x).set(y, 1);
-                    // create a new cluster for this position
-                    Position<Integer> newPos = partition.makeCluster(1, "land", x, y);
-                    positions[x][y] = newPos;
+                    // create a new cluster for this Node
+                    Node<Integer> newPos = partition.makeCluster(1, "land", x, y);
+                    Nodes[x][y] = newPos;
 
                     // union with adjacent land cells
                     if (x > 0 && data.get(x - 1).get(y).equals(1)) {
-                        partition.union(newPos, positions[x - 1][y]);
+                        partition.union(newPos, Nodes[x - 1][y]);
                     }
                     if (x < rows - 1 && data.get(x + 1).get(y).equals(1)) {
-                        partition.union(newPos, positions[x + 1][y]);
+                        partition.union(newPos, Nodes[x + 1][y]);
                     }
                     if (y > 0 && data.get(x).get(y - 1).equals(1)) {
-                        partition.union(newPos, positions[x][y - 1]);
+                        partition.union(newPos, Nodes[x][y - 1]);
                     }
                     if (y < cols - 1 && data.get(x).get(y + 1).equals(1)) {
-                        partition.union(newPos, positions[x][y + 1]);
+                        partition.union(newPos, Nodes[x][y + 1]);
                     }
                 }
                 // recount the number of islands
@@ -171,8 +173,8 @@ public class Part2a {
                         count++;
                     }
                 }
-                System.out.println("After phase " + phase + ":");
-                System.out.println("Number of islands: " + count);
+                System.out.println();
+                System.out.println(count > 0 ? count : -1);
                 // print the size of each island in descending order
                 sizes = new ArrayList<>();
                 for(Cluster<Integer> cluster : partition.clusters){
@@ -181,7 +183,7 @@ public class Part2a {
                     }
                 }
                 sizes.sort((a, b) -> b - a);
-                System.out.println("Sizes of islands in descending order: ");
+                //System.out.println("Sizes of islands in descending order: ");
                 for (int size : sizes){
                     System.out.print(size + " ");
                 }
@@ -191,7 +193,7 @@ public class Part2a {
                 for (int size : sizes){
                     totalSize += size;
                 }
-                System.out.println("Total size of islands: " + totalSize);
+                System.out.println(totalSize);
             }
             scanner.close();
         } catch (FileNotFoundException e) {
