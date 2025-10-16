@@ -3,11 +3,11 @@ package csi2110p1;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class DoublyLinkedList<E> implements Iterable<Node<E>> {
+public class Sequence<E> implements Iterable<Node<E>> {
     Node<E> head;
     Node<E> tail;
     int size;
-    public DoublyLinkedList() {
+    public Sequence() {
         head = null;
         tail = null;
         size = 0;

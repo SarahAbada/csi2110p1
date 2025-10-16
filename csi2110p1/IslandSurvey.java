@@ -6,13 +6,10 @@ import java.util.List;
 import java.util.Scanner;
 public class IslandSurvey {
     public static void main(String[] args) {
-        Scanner filename = new Scanner(System.in);
-        System.out.println("Enter the filename: ");
-        String fileName = filename.nextLine();
-        filename.close();
+        Scanner scanner = new Scanner(System.in);
         try {
-            File file = new File(fileName);
-            Scanner scanner = new Scanner(file);
+            //File file = new File(filename);
+            //Scanner scanner = new Scanner(file);
             // make a 2d list of data of integers
             List<List<Integer>> data = new ArrayList<>();
             Partition<Integer> partition = new Partition<>();
@@ -196,8 +193,8 @@ public class IslandSurvey {
                 System.out.println(totalSize);
             }
             scanner.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
+        } catch (Exception e) {
+            System.out.println("Error");
         }
     }
 }
