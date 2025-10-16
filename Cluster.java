@@ -1,4 +1,3 @@
-package csi2110p1;
 
     class Cluster<E>{
         Sequence<E> sequence;

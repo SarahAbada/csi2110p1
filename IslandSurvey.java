@@ -1,28 +1,26 @@
-package csi2110p1;
+//package csi2110p1;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-public class IslandLakeSurvey {
+public class IslandSurvey {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        
         try {
-            
+            //File file = new File(filename);
+            //Scanner scanner = new Scanner(file);
             // make a 2d list of data of integers
             List<List<Integer>> data = new ArrayList<>();
             Partition<Integer> partition = new Partition<>();
             String firstline = scanner.nextLine(); // read the first line (dimensions)
             String[] dimensions = firstline.trim().split("\\s+");
-            for (String dim : dimensions) {
-                System.out.println(dim);
-            }
+            //for (String dim : dimensions) {
+            //    System.out.println(dim);
+            //}
             int rows = Integer.parseInt(dimensions[0]);
             int cols = Integer.parseInt(dimensions[1]);
             Node<Integer>[][] Nodes = new Node[rows][cols];
-            int numberOfLakes = 0;
-            int areaOfLakes = 0;
             for (int i = 0; i < rows; i++){
                 String line = scanner.nextLine().trim();
                 String[] values = line.split(" ");
@@ -106,82 +104,26 @@ public class IslandLakeSurvey {
             //for(Node<Integer>[] pair : unionsToDo){
             //    partition.union(pair[0], pair[1]);
             //}
-            // get the number of clusters with id 1 (islands)
-
-            // next step is to get the lakes
-            // for each cluster of water
-            // check if it is completely surrounded by land clusters
-            // it cannot even have the corners of the edge touching another water cluster
-            // if it is, change its id to "lake"
-            for (Cluster<Integer> cluster : new ArrayList<>(partition.clusters)) {
-                if (partition.element(cluster.leader).equals(0)) {
-                    boolean isLake = true;
-                    for (Node<Integer> pos : cluster.sequence) {
-                        int x = pos.x;
-                        int y = pos.y;
-                        int[][] directions = {{-1, 0}, {0, -1}, {0, 1}, {1, 0}};
-                        for (int[] dir : directions) {
-                            int newX = x + dir[0];
-                            int newY = y + dir[1];
-                            if (newX < 0 || newX >= rows || newY < 0 || newY >= cols) {
-                                isLake = false;
-                                break;
-                            }
-                            if (data.get(newX).get(newY).equals(0)) continue;
-                        }
-                        if (!isLake) break;
-                    }
-
-                    if (isLake) {
-                        numberOfLakes++;
-                        areaOfLakes += cluster.sequence.size();
-                        cluster.id = "lake";
-
-                        // find out which island this lake is inside of
-                        List<Node<Integer>> NodesSnapshot = new ArrayList<>();
-                        for (Node<Integer> poss : cluster.sequence) {
-                            int xx = poss.x;
-                            int yy = poss.y;
-                            int[][] directionsa = {{-1, 0}, {0, -1}, {0, 1}, {1, 0}};
-                            for (int[] dir : directionsa) {
-                                int newX = xx + dir[0];
-                                int newY = yy + dir[1];
-                                if (newX >= 0 && newX < rows && newY >= 0 && newY < cols) {
-                                    if (data.get(newX).get(newY).equals(1)) {
-                                        Node<Integer> landPos = Nodes[newX][newY];
-                                        Cluster<Integer> landCluster = partition.getCluster(landPos);
-                                        NodesSnapshot.add(cluster.leader);
-                                        NodesSnapshot.add(landCluster.leader);
-                                        //partition.union(cluster.leader, landCluster.leader);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        for (int i = 0; i < NodesSnapshot.size(); i += 2) {
-                            partition.union(NodesSnapshot.get(i), NodesSnapshot.get(i + 1));
-                        }
-                    }
-                }
-            }
-
+            // get the number of clusters with id 1
             int count = 0;
-            for(Cluster<Integer> ccluster : partition.clusters){
-                if(partition.element(ccluster.leader).equals(1)){
+            for(Cluster<Integer> cluster : partition.clusters){
+                if(partition.element(cluster.leader).equals(1)){
                     count++;
                 }
             }
+            // print number of islands 
             System.out.println(count > 0 ? count : -1);
 
             // print the size of each island in descending order
             List<Integer> sizes = new ArrayList<>();
-            for(Cluster<Integer> cccluster : partition.clusters){
-                if(partition.element(cccluster.leader).equals(1)){
-                    sizes.add(cccluster.sequence.size());
+            for(Cluster<Integer> cluster : partition.clusters){
+                if(partition.element(cluster.leader).equals(1)){
+                    sizes.add(cluster.sequence.size());
                 }
             }
             sizes.sort((a, b) -> b - a);
-            //System.out.println("Sizes of islands in descending order: ");
+            // print sizes of the islands in descending order
+            
             for (int size : sizes){
                 System.out.print(size + " ");
             }
@@ -223,19 +165,18 @@ public class IslandLakeSurvey {
                 }
                 // recount the number of islands
                 count = 0;
-                for(Cluster<Integer> clusterr : partition.clusters){
-                    if(partition.element(clusterr.leader).equals(1)){
+                for(Cluster<Integer> cluster : partition.clusters){
+                    if(partition.element(cluster.leader).equals(1)){
                         count++;
                     }
                 }
                 System.out.println();
-                // print the total number of islands
                 System.out.println(count > 0 ? count : -1);
                 // print the size of each island in descending order
                 sizes = new ArrayList<>();
-                for(Cluster<Integer> clluster : partition.clusters){
-                    if(partition.element(clluster.leader).equals(1)){
-                        sizes.add(clluster.sequence.size());
+                for(Cluster<Integer> cluster : partition.clusters){
+                    if(partition.element(cluster.leader).equals(1)){
+                        sizes.add(cluster.sequence.size());
                     }
                 }
                 sizes.sort((a, b) -> b - a);
@@ -249,12 +190,10 @@ public class IslandLakeSurvey {
                 for (int size : sizes){
                     totalSize += size;
                 }
-                System.out.println("Total size of islands: " + totalSize);
-                System.out.println("Number of lakes: " + numberOfLakes);
-                System.out.println("Total area of lakes: " + areaOfLakes);
+                System.out.println(totalSize);
             }
             scanner.close();
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("Error");
         }
     }

@@ -1,4 +1,4 @@
-package csi2110p1;
+//package csi2110p1;
 
 public class TestPartition {
     public static void main(String[] args) {
